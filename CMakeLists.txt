@@ -23,7 +23,7 @@ SET(PROJECT_DESCRIPTION "Efficient Task Space Inverse Dynamics for Multi-body Sy
 SET(PROJECT_URL "https://github.com/${PROJECT_ORG}/${PROJECT_NAME}")
 
 # Project options
-OPTION(BUILD_PYTHON_INTERFACE "Build the python bindings" ON)
+OPTION(BUILD_PYTHON_INTERFACE "Build the python bindings" OFF)
 OPTION(INSTALL_PYTHON_INTERFACE_ONLY "Install *ONLY* the python bindings" OFF)
 OPTION(SUFFIX_SO_VERSION "Suffix library name with its version" ON)
 OPTION(INITIALIZE_WITH_NAN "Initialize Eigen entries with NaN" OFF)

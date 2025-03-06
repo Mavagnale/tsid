@@ -69,8 +69,11 @@ class TaskEnergy : public TaskBase {
   double gammaFunction(const double A, const double P, const double delta);
 
   TaskEnergy(const std::string & name,
-             RobotWrapper & robot,
-             const double dt);
+    RobotWrapper & robot,
+    const double dt,
+    double E_max_tank,
+    double E_min_tank,
+    double P_low);
 
   int dim() const; // dimension of the constraint, equal to 1
 

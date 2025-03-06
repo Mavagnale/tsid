@@ -57,29 +57,32 @@ double TaskEnergy::gammaFunction(const double A, const double P,
 }
 
 TaskEnergy::TaskEnergy(const std::string & name,
-                       RobotWrapper & robot,
-                       const double dt):
-  TaskBase(name, robot),
-  m_dt(dt),
-  m_passivityConstraint(name, 1, robot.nv()) {
-  m_dim = 1;
-  m_E_max_tank = 5.0;
-  m_E_min_tank = 0.1;
-  m_E_tank = 5.0;     // Set the energy tank first value at its maximum
-  m_dE_tank = 0.0;
-  m_H = m_E_tank;
-  m_dH = 0.0;
-  m_H_tot = 0.0;
-  m_dH_tot = 0.0;
-  m_b_lower = -1e10 * Vector::Ones(m_dim);
-  m_b_upper = 1e10 * Vector::Ones(m_dim);
-  m_first_iter = true;
-  m_alpha = 1.0;
-  m_beta = 1.0;
-  m_gamma = 1.0;
-  m_Plow = -5.0;
-  m_test_semi_def_pos = false;  // No test on the positivity of S
-  m_Lambda_Kp_pos_def = true;
+  RobotWrapper & robot,
+  const double dt,
+  double E_max_tank,
+  double E_min_tank,
+  double P_low):
+TaskBase(name, robot),
+m_dt(dt),
+m_passivityConstraint(name, 1, robot.nv()) {
+m_dim = 1;
+m_E_max_tank = E_max_tank;
+m_E_min_tank = E_min_tank;
+m_E_tank = E_max_tank;     // Set the energy tank first value at its maximum
+m_dE_tank = 0.0;
+m_H = m_E_tank;
+m_dH = 0.0;
+m_H_tot = 0.0;
+m_dH_tot = 0.0;
+m_b_lower = -1e10 * Vector::Ones(m_dim);
+m_b_upper = 1e10 * Vector::Ones(m_dim);
+m_first_iter = true;
+m_alpha = 1.0;
+m_beta = 1.0;
+m_gamma = 1.0;
+m_Plow = P_low;
+m_test_semi_def_pos = false;  // No test on the positivity of S
+m_Lambda_Kp_pos_def = true;
 }
 
 int TaskEnergy::dim() const {
@@ -334,7 +337,7 @@ const ConstraintBase & TaskEnergy::compute(const double ,
 
     i++;
   }
-  // Sum of the term along the tasks
+  // Sum of the terms along the tasks
   double A = m_A.sum();
   double B = non_linear_effect_term - contact_forces_term; // B^phi of eq (22)
   double A_tot = A + task_force_term; // B^sigma total of eq (22)
@@ -386,7 +389,7 @@ const ConstraintBase & TaskEnergy::compute(const double ,
   m_b_lower = m_dH * Vector::Ones(m_dim);
   m_passivityConstraint.upperBound() = m_b_upper;
   m_passivityConstraint.lowerBound() = m_b_lower;
-
+  
   return m_passivityConstraint;
 }
 
